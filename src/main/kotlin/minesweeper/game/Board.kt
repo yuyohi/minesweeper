@@ -1,36 +1,25 @@
 package minesweeper.game
 
-class Board(bombnum: Int, boardSize: Int, selectPosition: Pair<Int, Int>) {
+class Board(private val bombnum: Int, private val boardSize: Int, private val selectPosition: Pair<Int, Int>) {
     /**
-     * マインスイーパーの爆弾と旗の位置を表す二次元配列
+     * マインスイーパーのマス目を表現する二次元配列
      */
-    private val board = Array(boardSize) { Array(boardSize) { State.EMPTY } }
-
-    /**
-     * 周りに存在する爆弾の数を表す二次元配列
-     */
-
-    /**
-     * 対応するボードが隠れているかを表す二次元配列
-     */
-    private val hiddenBlocks = Array(boardSize) { Array(boardSize) { true } }
+    private val board = Array(boardSize) { Array(boardSize) { Element() } }
 
     init {
-        board.forEach {
-            for (i in it.indices) {
-                it[i] = State.EMPTY
-            }
-        }
-        hiddenBlocks.forEach {
-            for (i in it.indices) {
-                it[i] = true
-            }
-        }
+        setBomb()
 
-        // 爆弾の場所を決める
+
+    }
+
+    /**
+     * 爆弾を配置するメソッド
+     */
+    private fun setBomb() {
         val bombPosition = MutableList(boardSize * boardSize) { it }
         bombPosition.shuffle()
         var i = 0
+
         while (i < bombnum) {
             val position = Pair(bombPosition[i] / boardSize, bombPosition[i] % boardSize)
 
@@ -39,8 +28,16 @@ class Board(bombnum: Int, boardSize: Int, selectPosition: Pair<Int, Int>) {
                 continue
             }
 
-            board[position.first][position.second] = State.BOMB
+            board[position.first][position.second].state = State.BOMB
             i += 1
         }
     }
+
+    /**
+     * 周りの爆弾を数える
+     */
+    fun countAroundBomb() {
+
+    }
+
 }
