@@ -1,6 +1,6 @@
 package minesweeper.game
 
-class Board(private val bombnum: Int, private val boardSize: Int, private val selectPosition: Pair<Int, Int>) {
+class Board(private val bombNum: Int, private val boardSize: Int, private val selectPosition: Pair<Int, Int>) {
     /**
      * マインスイーパーのマス目を表現する二次元配列
      */
@@ -20,7 +20,7 @@ class Board(private val bombnum: Int, private val boardSize: Int, private val se
         bombPosition.shuffle()
         var i = 0
 
-        while (i < bombnum) {
+        while (i < bombNum) {
             val position = Pair(bombPosition[i] / boardSize, bombPosition[i] % boardSize)
 
             // ユーザが選択した場所に爆弾が配置されてしまった場合
@@ -37,7 +37,7 @@ class Board(private val bombnum: Int, private val boardSize: Int, private val se
      * 周りの爆弾を数える
      */
     fun countAroundBomb() {
-
+        
     }
 
 }
