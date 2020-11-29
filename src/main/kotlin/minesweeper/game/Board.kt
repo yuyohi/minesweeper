@@ -37,7 +37,27 @@ class Board(private val bombNum: Int, private val boardSize: Int, private val se
      * 周りの爆弾を数える
      */
     fun countAroundBomb() {
-        
+        var aroundBomb = 0
+
+        board.forEachIndexed { i, row ->
+            row.forEachIndexed { j, element ->
+                for (n in -1..1) {
+                    for (m in -1..1) {
+                        if (n == 0 && m == 0) {  // 自分自身のとき数えない
+                            continue
+                        }
+                        val temp = board.getOrNull(i + n)?.getOrNull(j + m)
+
+                        if (temp != null) {
+                            if (temp.state == State.BOMB) {
+                                aroundBomb += 1
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
     }
 
 }
