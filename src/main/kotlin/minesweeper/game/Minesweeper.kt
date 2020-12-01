@@ -5,14 +5,14 @@ import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
 
-class Minesweeper(): JFrame(){
-    init{
+class Minesweeper() : JFrame() {
+    init {
         initialize()
     }
 
-    private fun initialize(){
+    private fun initialize() {
         title = "Minesweeper"
-        setSize(450, 550)
+        setSize(460, 530)
         defaultCloseOperation = DISPOSE_ON_CLOSE
 
         // ゲーム画面

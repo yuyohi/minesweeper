@@ -3,10 +3,17 @@ package minesweeper.game
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 
-class ElementButtonListener(private val board: Board, val i: Int, val j: Int): ActionListener {
+class ElementButtonListener(private val gameBoard: Board, private val i: Int, private val j: Int) : ActionListener {
 
-    public override fun actionPerformed(e: ActionEvent) {
-        board.openBoard(i, j, true)
+    override fun actionPerformed(e: ActionEvent) {
+        if (gameBoard.firstTime) {
+            gameBoard.initial(i, j)
+        }
+
+        val success = gameBoard.openBoard(i, j, true)
+        if (success) {
+            gameBoard.board[i][j].openElement()
+        }
     }
 
 }

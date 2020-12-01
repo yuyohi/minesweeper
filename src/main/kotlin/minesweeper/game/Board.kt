@@ -4,25 +4,31 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
     /**
      * マインスイーパーのマス目を表現する二次元配列
      */
-    private val board = Array(boardSize) { Array(boardSize) { Element() } }
+    val board = Array(boardSize) { Array(boardSize) { Element() } }
 
     /**
-     * ユーザーが選択したマス目
+     * ユーザーが一回もマス目を開けていないかどうか
      */
-    private var selectPosition: Pair<Int, Int> = Pair(0, 0)
+    var firstTime = true
 
     /**
      * ボードを初期化する関数
+     *
+     * @param i ユーザーが選択した行数
+     * @param j ユーザーが選択した列数
      */
-    fun initial() {
-        setBomb()
+    fun initial(i: Int, j: Int) {
+        setBomb(i, j)
         countAroundBomb()
     }
 
     /**
      * 爆弾を配置するメソッド
+     *
+     * @param x ユーザーが選択したマス目の行番号
+     * @param y ユーザーが選択したマス目の列番号
      */
-    private fun setBomb() {
+    private fun setBomb(x: Int, y: Int) {
         val bombPosition = MutableList(boardSize * boardSize) { it }
         bombPosition.shuffle()
         var i = 0
@@ -31,11 +37,11 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
             val position = Pair(bombPosition[i] / boardSize, bombPosition[i] % boardSize)
 
             // ユーザが選択した場所に爆弾が配置されてしまった場合
-            if (selectPosition.first == position.first && selectPosition.second == position.second) {
+            if (x == position.first && y == position.second) {
                 continue
             }
 
-            board[position.first][position.second].state = State.BOMB
+            board[position.first][position.second].bomb = true
             i += 1
         }
     }
@@ -57,7 +63,7 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
                         }
                         val temp = board.getOrNull(i + n)?.getOrNull(j + m)
 
-                        if (temp?.state == State.BOMB) {
+                        if (temp?.bomb == true) {
                             aroundBomb += 1
                         }
 
@@ -74,23 +80,35 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
      * @param i 行
      * @param j 列
      * @param user ユーザーがクリックしたものかどうか(ユーザーがクリックしたときは爆弾でも空ける)
-     * @return 空けることに成功したかどうか
+     * @return ゲームオーバーではないときtrue
      */
-    fun openBoard(i: Int, j: Int, user: Boolean): Boolean{
+    fun openBoard(i: Int, j: Int, user: Boolean): Boolean {
         // 範囲外のとき
         if (board.getOrNull(i)?.getOrNull(j) == null) {
             return true
         }
 
-        // ユーザーが開けたとき
-        if (user) {
-            if (board[i][j].state == State.BOMB)
-                board[i][j].hiddenFlag = false
-                return false
+        // 既に開けられているところを開けた場合
+        if (!board[i][j].hiddenFlag) {
+            return true
         }
 
-        if (board[i][j].state == State.EMPTY) {
+        // ユーザーが開けたとき
+        if (user) {
+            if (board[i][j].bomb) {
+                board[i][j].hiddenFlag = false
+                board[i][j].openElement()
+                return false
+            }
+        }
+
+        if (board[i][j].flag) {
+            return true
+        }
+
+        if (!board[i][j].bomb) {
             board[i][j].hiddenFlag = false
+            board[i][j].openElement()
             // 周りを探索
             for (n in -1..1) {
                 for (m in -1..1) {
@@ -102,6 +120,7 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
             }
         }
 
+        return true
     }
 
 }
