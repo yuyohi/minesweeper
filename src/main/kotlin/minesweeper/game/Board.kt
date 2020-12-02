@@ -1,6 +1,8 @@
 package minesweeper.game
 
-class Board(private val bombNum: Int, private val boardSize: Int) {
+import java.awt.Color
+
+class Board(val bombNum: Int, val boardSize: Int) {
     /**
      * マインスイーパーのマス目を表現する二次元配列
      */
@@ -20,10 +22,11 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
     fun initial(i: Int, j: Int) {
         setBomb(i, j)
         countAroundBomb()
+        firstTime = false
     }
 
     /**
-     * 爆弾を配置するメソッド
+     * 爆弾を配置する
      *
      * @param x ユーザーが選択したマス目の行番号
      * @param y ユーザーが選択したマス目の列番号
@@ -33,16 +36,29 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
         bombPosition.shuffle()
         var i = 0
 
-        while (i < bombNum) {
-            val position = Pair(bombPosition[i] / boardSize, bombPosition[i] % boardSize)
 
-            // ユーザが選択した場所に爆弾が配置されてしまった場合
-            if (x == position.first && y == position.second) {
+        for (num in bombPosition) {
+            val position = Pair(num / boardSize, num % boardSize)
+
+            // ユーザが選択した場所と周囲8マスに爆弾が配置されてしまった場合
+            var continueFlag = false
+            for (n in -1..1) {
+                if (continueFlag) continue
+                for (m in -1..1) {
+                    if (continueFlag) continue
+                    continueFlag = (x + n) == position.first && (y + m) == position.second
+                }
+            }
+            if (continueFlag) {
                 continue
             }
 
             board[position.first][position.second].bomb = true
+
             i += 1
+            if (i == bombNum) {
+                break
+            }
         }
     }
 
@@ -50,7 +66,7 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
      * 周りの爆弾を数える
      */
     private fun countAroundBomb() {
-        var aroundBomb = 0
+        var aroundBomb: Int
 
         board.forEachIndexed { i, row ->
             row.forEachIndexed { j, element ->
@@ -75,7 +91,7 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
     }
 
     /**
-     * マス目を空ける関数
+     * マス目を空ける
      *
      * @param i 行
      * @param j 列
@@ -87,40 +103,50 @@ class Board(private val bombNum: Int, private val boardSize: Int) {
         if (board.getOrNull(i)?.getOrNull(j) == null) {
             return true
         }
-
         // 既に開けられているところを開けた場合
         if (!board[i][j].hiddenFlag) {
             return true
         }
-
+        // 旗があるとき
+        if (board[i][j].flag) {
+            return true
+        }
         // ユーザーが開けたとき
         if (user) {
             if (board[i][j].bomb) {
-                board[i][j].hiddenFlag = false
                 board[i][j].openElement()
                 return false
             }
         }
 
-        if (board[i][j].flag) {
-            return true
-        }
-
         if (!board[i][j].bomb) {
-            board[i][j].hiddenFlag = false
             board[i][j].openElement()
-            // 周りを探索
-            for (n in -1..1) {
-                for (m in -1..1) {
-                    if (n == 0 && m == 0) {  // 自分自身のとき
-                        continue
+
+            if (board[i][j].aroundBomb == 0) {  // 周りに爆弾が1つもないとき周りを探索
+                for (n in -1..1) {
+                    for (m in -1..1) {
+                        if (n == 0 && m == 0) {  // 自分自身のとき
+                            continue
+                        }
+                        openBoard(i + n, j + m, false)
                     }
-                    openBoard(i + n, j + m, false)
                 }
             }
         }
 
         return true
+    }
+
+    /**
+     * ボードをリセットする
+     */
+    fun resetBoard() {
+        board.forEach { row ->
+            row.forEach {
+                it.resetElement()
+            }
+        }
+        firstTime = true
     }
 
 }

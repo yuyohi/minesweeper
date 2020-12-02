@@ -1,16 +1,19 @@
 package minesweeper.game
 
 import java.awt.Color
+import java.awt.Font
+import javax.swing.JLabel
+import javax.swing.JOptionPane
 import javax.swing.JPanel
 
-class GameDisplay(private val boardSize: Int, private val bombNum: Int): JPanel() {
+class GameDisplay(boardSize: Int, bombNum: Int) : JPanel() {
 
     /**
      *  ボード
      */
-    private val gameBoard = Board(bombNum, boardSize)
+    val gameBoard = Board(bombNum, boardSize)
 
-    init{
+    init {
         layout = null
 
         setButton(50)
@@ -29,10 +32,30 @@ class GameDisplay(private val boardSize: Int, private val bombNum: Int): JPanel(
 
                 add(button)
 
-                button.addActionListener(ElementButtonListener(gameBoard, i, j))
+                val listener = ElementButtonListener(this, gameBoard, i, j)
+                button.addActionListener(listener)
+                button.addMouseListener(listener)
             }
         }
     }
 
+    /**
+     * ゲームを終了する
+     *
+     * @param winner ユーザーが勝っているかどうか
+     */
+    fun finishGame(winner: Boolean) {
+        val finishDialog = JLabel(
+            if (winner) {
+                "Game clear!!"
+            } else {
+                "Game over"
+            }
+        )
+        finishDialog.font = Font("Arial", Font.PLAIN, 28)
 
+        JOptionPane.showMessageDialog(this, finishDialog)
+
+        gameBoard.resetBoard()
+    }
 }

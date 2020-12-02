@@ -1,5 +1,10 @@
 package minesweeper.game
 
-fun main(args: Array<String>) {
+import javax.swing.SwingUtilities
 
+fun main(args: Array<String>) {
+    SwingUtilities.invokeLater {
+        val frame = MinesweeperGame()
+        frame.isVisible = true
+    }
 }
