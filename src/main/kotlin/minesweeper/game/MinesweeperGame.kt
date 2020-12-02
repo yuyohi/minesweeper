@@ -5,20 +5,19 @@ import javax.swing.JButton
 import javax.swing.JFrame
 import javax.swing.JPanel
 
+/**
+ * ゲームを行うクラス
+ *
+ * @property gamePanel ゲーム画面
+ * @property setupPanel 下部のパネル
+ * @property resetButton リセットボタン
+ */
 class MinesweeperGame : JFrame() {
-    /**
-     * ゲーム画面
-     */
+
     private val gamePanel = GameDisplay(9, 10)
 
-    /**
-     * 下部のパネル
-     */
     private val setupPanel = JPanel()
 
-    /**
-     * リセットボタン
-     */
     private val resetButton = JButton("Reset")
 
     init {

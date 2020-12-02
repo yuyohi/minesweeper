@@ -1,16 +1,17 @@
 package minesweeper.game
 
-import java.awt.Color
-
+/**
+ * マインスイーパーのボードを表すクラス
+ *
+ * @property bombNum 爆弾の数
+ * @property boardSize ボードの縦横のマス目
+ * @property board マインスイーパーのマス目を表現する二次元配列
+ * @property firstTime ユーザーが一回もマス目を開けていないかどうか
+ */
 class Board(val bombNum: Int, val boardSize: Int) {
-    /**
-     * マインスイーパーのマス目を表現する二次元配列
-     */
+
     val board = Array(boardSize) { Array(boardSize) { Element() } }
 
-    /**
-     * ユーザーが一回もマス目を開けていないかどうか
-     */
     var firstTime = true
 
     /**

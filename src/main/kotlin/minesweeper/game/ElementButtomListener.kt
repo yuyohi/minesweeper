@@ -6,6 +6,15 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.SwingUtilities
 
+/**
+ * マス目のリスナークラス
+ *
+ * @property game ゲームディスプレイ
+ * @property gameBoard ゲームボード
+ * @property i マス目の行番号
+ * @property j マス目の列番号
+ * @property clearNum クリアするのに必要な開いているマス目
+ */
 class ElementButtonListener(
     private val game: GameDisplay,
     private val gameBoard: Board,

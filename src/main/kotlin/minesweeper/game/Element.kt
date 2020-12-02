@@ -13,6 +13,7 @@ import javax.swing.JButton
  * @property bomb 爆弾があるかどうか
  * @property aroundBomb 周りの爆弾の数
  * @property flag 旗が立っているかどうか
+ * @property openElementNum 開いているマス目の数を表す静的フィールド
  */
 class Element(
     var hiddenFlag: Boolean = true,

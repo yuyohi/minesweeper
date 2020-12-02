@@ -6,11 +6,13 @@ import javax.swing.JLabel
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 
+/**
+ * ゲーム(ボード)画面のクラス
+ *
+ * @property gameBoard ゲームのボード
+ */
 class GameDisplay(boardSize: Int, bombNum: Int) : JPanel() {
 
-    /**
-     *  ボード
-     */
     val gameBoard = Board(bombNum, boardSize)
 
     init {
